@@ -1,0 +1,59 @@
+{
+  "name": "tcc-online-judge-python",
+  "version": "1.0.0",
+  "scripts": {
+    "prepare": "husky install",
+    "cm": "cz"
+  },
+  "devDependencies": {
+    "cz-conventional-changelog": "^3.3.0",
+    "husky": "^8.0.3"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog",
+      "types": {
+        "🌟 feat": {
+          "description": "Um novo recurso",
+          "title": "Recurso"
+        },
+        "🔧 fix": {
+          "description": "Uma correção de um bug",
+          "title": "Consertos"
+        },
+        "📖 docs": {
+          "description": "Apenas a documentação muda",
+          "title": "Documentação"
+        },
+        "💄 style": {
+          "description": "Alterações que não afetam o significado do código (espaço em branco, formatação, falta de ponto-e-vírgula etc.)",
+          "title": "Estilo"
+        },
+        "📈 perf": {
+          "description": "Uma mudança de código que melhora o desemprenho",
+          "title": "Performance"
+        },
+        "🧪 test": {
+          "description": "Adicionando testes ausentes ou corrigindo testes existentes",
+          "title": "Teste"
+        },
+        "⚙️ build": {
+          "description": "Alterações que afetam o sistema de compilação ou dependências externas (exemplo: escopos: gulp, broccoli, npm)",
+          "title": "Build"
+        },
+        "🔁 ci": {
+          "description": "Alterações em nossos arquivos e scripts de configuração de CI (exemplos de escopos: Travis, Circle, BrowserStack, SauceLabs)",
+          "title": "Integração Continua"
+        },
+        "❓ chore": {
+          "description": "Outras alterações que não modificam os arquivos src ou de teste",
+          "title": "Tarefa"
+        },
+        "🔀 reverter": {
+          "description": "Reverte um commit anterior",
+          "title": "Reverter"
+        }
+      }
+    }
+  }
+}
