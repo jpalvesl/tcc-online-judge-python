@@ -1,5 +1,6 @@
 from __future__ import print_function
 from flask import Flask, make_response, jsonify, request
+import time
 
 import os
 import subprocess
@@ -39,24 +40,24 @@ app = Flask('Online Judge')
 def realiza_submissao_por_caso():
     body_json = request.json
 
-    print(body_json.get("entradas"))
-
     with open("entradas.txt", "w") as arquivo_entradas:
         entradas = body_json.get("entradas").split('\n')
         for linha in range(len(entradas)):
-            arquivo_entradas.write(entradas[linha])
+            arquivo_entradas.write(f"{entradas[linha]}\n")
 
     linhas_inicio = ['import sys\n',
                      f'sys.stdin = open("entradas.txt", "r")\n']
 
-    codigo = ''.join(linhas_inicio) + body_json.get("codigo_resposta")
+    codigo = ''.join(linhas_inicio) + body_json.get("codigoResposta")
 
     with open('arquivo_codigo', "w") as my_file:
         for linha in range(len(codigo)):
             my_file.write(codigo[linha])
         my_file.close()
 
+    inicio = time.time()
     code, out, err, mix = run([sys.executable, './arquivo_codigo'])
+    fim = time.time()
 
     with open("saidas.txt", "w") as arquivo_saidas:
         for linha in range(len(out)):
@@ -64,7 +65,10 @@ def realiza_submissao_por_caso():
 
 
     return {
-        'resposta': ''.join(out),
+        'entrada': body_json.get("entradas"),
+        'saida': ''.join(out),
+        'status': 'ok',
+        'tempo': fim - inicio
     }
 
 
