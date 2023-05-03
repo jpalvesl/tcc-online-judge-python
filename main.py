@@ -6,6 +6,7 @@ import os
 import subprocess
 import sys
 
+
 def run(cmd):
     os.environ['PYTHONUNBUFFERED'] = "1"
     proc = subprocess.Popen(cmd,
@@ -34,6 +35,20 @@ def run(cmd):
 
 app = Flask('Online Judge')
 
+dict_erros = {
+    'DIVISAO_POR_ZERO': 'ZeroDivisionError',
+    'INDICE_NAO_ENCONTRADO': 'IndexError',
+    'EXECECAO_NAO_ENCONTRADA': 'Exception'
+}
+
+
+def cria_blocos_except(dict_erros: dict):
+    string_retornada = ''
+
+    for key in dict_erros.keys():
+        string_retornada += f"except {dict_erros[key]} as err:\n\tprint('{key}', end='')\n"
+
+    return string_retornada
 
 
 @app.route('/submissao_caso_teste', methods=['POST'])
@@ -48,7 +63,10 @@ def realiza_submissao_por_caso():
     linhas_inicio = ['import sys\n',
                      f'sys.stdin = open("entradas.txt", "r")\n']
 
-    codigo = ''.join(linhas_inicio) + body_json.get("codigoResposta")
+    codigoRespostaComTryExcept = 'try:\n\t' + '\n\t'.join(body_json.get("codigoResposta").split('\n')) \
+                                 + '\n' + cria_blocos_except(dict_erros)
+
+    codigo = ''.join(linhas_inicio) + codigoRespostaComTryExcept
 
     with open('arquivo_codigo', "w") as my_file:
         for linha in range(len(codigo)):
@@ -63,13 +81,27 @@ def realiza_submissao_por_caso():
         for linha in range(len(out)):
             arquivo_saidas.write(out[linha])
 
-
-    return {
+    dict_retornado = {
         'entrada': body_json.get("entradas"),
         'saida': ''.join(out),
-        'status': 'ok',
+        'status': 'OK',
+        'error': '',
         'tempo': fim - inicio
     }
+
+    # verificando erros em codigo
+    if len(out) > 0 and out[-1] in dict_erros.keys():
+        dict_retornado['error'] = dict_retornado['saida']
+        dict_retornado['saida'] = ''
+        dict_retornado['status'] = out[-1]
+        dict_retornado['tempo'] = 0
+
+    # verificando erros de apresentacao da saida
+    elif dict_retornado['saida'][:-1] != body_json['saida']:
+        dict_retornado['status'] = 'ERRO DE APRESENTAÇÃO'
+
+
+    return dict_retornado
 
 
 app.run()
