@@ -36,9 +36,14 @@ def run(cmd):
 app = Flask('Online Judge')
 
 dict_erros = {
-    'DIVISAO_POR_ZERO': 'ZeroDivisionError',
-    'INDICE_NAO_ENCONTRADO': 'IndexError',
-    'EXECECAO_NAO_ENCONTRADA': 'Exception'
+    'Divisão por zero': 'ZeroDivisionError',
+    'Índice não encontrado': 'IndexError',
+    'Erro de sintáxe': 'SyntaxError',
+    'Variável não definida': 'NameError',
+    'Erro de tipo': 'TypeError',
+    'Erro de valor': 'ValueError',
+    'Erro de sistema operacional': 'OSError',
+    'Exceção não encontrada': 'Exception'
 }
 
 
@@ -51,7 +56,7 @@ def cria_blocos_except(dict_erros: dict):
     return string_retornada
 
 
-@app.route('/submissao_caso_teste', methods=['POST'])
+@app.route('/submissao_caso_teste', methods=['POST'], )
 def realiza_submissao_por_caso():
     body_json = request.json
 
@@ -98,7 +103,7 @@ def realiza_submissao_por_caso():
 
     # verificando erros de apresentacao da saida
     elif dict_retornado['saida'][:-1] != body_json['saida']:
-        dict_retornado['status'] = 'ERRO DE APRESENTAÇÃO'
+        dict_retornado['status'] = 'Saída incorreta'
 
 
     return dict_retornado
