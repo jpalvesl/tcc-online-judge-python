@@ -101,6 +101,12 @@ def realiza_submissao_por_caso():
         dict_retornado['status'] = out[-1]
         dict_retornado['tempo'] = 0
 
+    if len(err) > 0:
+        dict_retornado['error'] = 'Erro de sintáxe'
+        dict_retornado['saida'] = ''
+        dict_retornado['status'] = 'Erro de sintáxe'
+        dict_retornado['tempo'] = 0
+
     # verificando erros de apresentacao da saida
     elif dict_retornado['saida'][:-1] != body_json['saida']:
         dict_retornado['status'] = 'Saída incorreta'
